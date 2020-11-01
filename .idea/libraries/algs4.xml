@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="algs4">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../Java Packages/algs4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Java Packages/hamcrest-core-1.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Java Packages/junit-4.13.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../Java Packages/algs4.jar!/" />
+    </SOURCES>
+  </library>
+</component>
