@@ -1,68 +1,117 @@
+import java.util.Arrays;
+
 public class Percolation {
-    private final int[][] grid;
     private final int gridSize;
-    private int numberOfOpenSites = 0;
+    private final int topVirtualPoint;
+    private final int bottomVirtualPoint;
+    private final int[][] grid;
+    private int openSiteAmount;
+    private final int[] integers;
+    private final int[] sizes;
 
-    // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
-        if (n <= 0 ) {
-            throw new IllegalArgumentException();
-        }
-
-        int cellName = 0;
         this.gridSize = n;
         this.grid = new int[n][n];
+        this.integers = new int[n * n + 2];
+        this.sizes = new int[integers.length];
+        Arrays.fill(this.sizes, 1);
 
+        int cellName = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                this.grid[i][j] = cellName;
+                this.integers[cellName] = cellName;
+                this.grid[i][j] = -1;
                 cellName++;
             }
         }
+
+        this.topVirtualPoint = n * n;
+        this.bottomVirtualPoint = n * n + 1;
+        this.integers[this.topVirtualPoint] = this.topVirtualPoint;
+        this.integers[this.bottomVirtualPoint] = this.bottomVirtualPoint;
     }
 
-    // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
-        row = row - 1;
-        col = col - 1;
-        this.validate(row, col);
-        this.numberOfOpenSites++;
+        if (this.isOpen(row, col)) {
+            return;
+        }
+        this.grid[row][col] = row * this.gridSize + col;
+        this.connectNearbyOpenCells(row, col);
+        this.openSiteAmount++;
     }
 
-    // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-        row = row - 1;
-        col = col - 1;
-        this.validate(row, col);
-        return this.grid[row][col] != this.gridSize * row + col;
+        return this.grid[row][col] != -1;
     }
 
-    // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        row = row - 1;
-        col = col - 1;
-        this.validate(row, col);
-        return false;
+        return this.grid[row][col] == -1;
     }
 
-    // returns the number of open sites
     public int numberOfOpenSites() {
-        return this.numberOfOpenSites;
+        return this.openSiteAmount;
     }
 
-    // does the system percolate?
     public boolean percolates() {
-
-        return false;
+        return connected(this.bottomVirtualPoint, this.topVirtualPoint);
     }
 
-    private void validate(int row, int col) {
-        if (row >= this.gridSize || row < 0 || col >= this.gridSize || col < 0) {
-            throw new IllegalArgumentException();
+    private void connectNearbyOpenCells(int row, int col) {
+        if (row + 1 >= this.gridSize) {
+            this.union(this.bottomVirtualPoint, this.grid[row][col]);
+        } else {
+            if (this.isOpen(row + 1, col)) {
+                this.union(this.grid[row + 1][col], this.grid[row][col]);
+            }
+        }
+
+        if (row - 1 < 0) {
+            this.union(this.topVirtualPoint, this.grid[row][col]);
+        } else {
+            if (this.isOpen(row - 1, col)) {
+                this.union(this.grid[row - 1][col], this.grid[row][col]);
+            }
+        }
+
+        if (col + 1 < this.gridSize && this.isOpen(row, col + 1)) {
+            this.union(this.grid[row][col + 1], this.grid[row][col]);
+        }
+
+        if (col - 1 >= 0 && this.isOpen(row, col - 1)) {
+            this.union(this.grid[row][col - 1], this.grid[row][col]);
         }
     }
 
-    // test client (optional)
+    private boolean connected(int a, int b) {
+        return findRoot(a) == findRoot(b);
+    }
+
+    private int[] union(int a, int b) {
+        int rootA = findRoot(a);
+        int rootB = findRoot(b);
+
+        if (rootA == rootB) {
+            return this.integers;
+        }
+
+        if (this.sizes[rootA] < this.sizes[rootB]) {
+            this.integers[rootA] = rootB;
+            this.sizes[rootB] += this.sizes[rootA];
+        } else {
+            this.integers[rootB] = rootA;
+            this.sizes[rootA] += this.sizes[rootB];
+        }
+
+        return this.integers;
+    }
+
+    private int findRoot(int i) {
+        while (i != this.integers[i]) {
+            i = this.integers[i];
+        }
+        return i;
+    }
+
     public static void main(String[] args) {
 
     }
