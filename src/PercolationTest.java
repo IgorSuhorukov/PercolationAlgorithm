@@ -125,29 +125,88 @@ public class PercolationTest {
         assertTrue(percolation.percolates());
         percolation.open(1, 0);
         assertTrue(percolation.percolates());
+        assertEquals(4, percolation.numberOfOpenSites());
     }
 
     @Test
     public void testPercolates4() {
+        // Case 1
         Percolation percolation = new Percolation(4);
         percolation.open(0, 0);
         assertFalse(percolation.percolates());
+        assertEquals(1, percolation.numberOfOpenSites());
+
         percolation.open(1, 0);
         assertFalse(percolation.percolates());
+        assertEquals(2, percolation.numberOfOpenSites());
+
         percolation.open(2, 0);
         assertFalse(percolation.percolates());
+        assertEquals(3, percolation.numberOfOpenSites());
+
         percolation.open(3, 0);
         assertTrue(percolation.percolates());
+        assertEquals(4, percolation.numberOfOpenSites());
 
+        // Case 2
         percolation = new Percolation(4);
         percolation.open(0, 1);
         assertFalse(percolation.percolates());
+        assertEquals(1, percolation.numberOfOpenSites());
+
         percolation.open(1, 0);
         assertFalse(percolation.percolates());
+        assertEquals(2, percolation.numberOfOpenSites());
+
         percolation.open(2, 0);
         assertFalse(percolation.percolates());
+        assertEquals(3, percolation.numberOfOpenSites());
+
         percolation.open(3, 0);
         assertFalse(percolation.percolates());
+        assertEquals(4, percolation.numberOfOpenSites());
+
+        // Case 3
+        percolation = new Percolation(4);
+        percolation.open(3, 0);
+        assertFalse(percolation.percolates());
+        assertEquals(1, percolation.numberOfOpenSites());
+
+        percolation.open(2, 3);
+        assertFalse(percolation.percolates());
+        assertEquals(2, percolation.numberOfOpenSites());
+
+        percolation.open(1, 3);
+        assertFalse(percolation.percolates());
+        assertEquals(3, percolation.numberOfOpenSites());
+
+        percolation.open(2, 1);
+        assertFalse(percolation.percolates());
+        assertEquals(4, percolation.numberOfOpenSites());
+
+        percolation.open(1, 2);
+        assertFalse(percolation.percolates());
+        assertEquals(5, percolation.numberOfOpenSites());
+
+        percolation.open(0, 3);
+        assertFalse(percolation.percolates());
+        assertEquals(6, percolation.numberOfOpenSites());
+
+        percolation.open(3, 2);
+        assertFalse(percolation.percolates());
+        assertEquals(7, percolation.numberOfOpenSites());
+
+        percolation.open(1, 2); // duplicate
+        assertFalse(percolation.percolates());
+        assertEquals(7, percolation.numberOfOpenSites());
+
+        percolation.open(1, 1);
+        assertFalse(percolation.percolates());
+        assertEquals(8, percolation.numberOfOpenSites());
+
+        percolation.open(2, 0);
+        assertTrue(percolation.percolates());
+        assertEquals(9, percolation.numberOfOpenSites());
     }
 
     @Test
