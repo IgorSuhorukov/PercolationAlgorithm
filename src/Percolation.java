@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class Percolation {
     private final int gridSize;
     private final int topVirtualPoint;
@@ -17,12 +15,12 @@ public class Percolation {
         this.grid = new int[n][n];
         this.integers = new int[n * n + 2];
         this.sizes = new int[integers.length];
-        Arrays.fill(this.sizes, 1);
 
         int cellName = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 this.integers[cellName] = cellName;
+                this.sizes[cellName] = 1;
                 this.grid[i][j] = -1;
                 cellName++;
             }
@@ -119,9 +117,5 @@ public class Percolation {
         if (row > this.gridSize || row < 1 || col > this.gridSize || col < 1) {
             throw new IllegalArgumentException();
         }
-    }
-
-    public static void main(String[] args) {
-
     }
 }
