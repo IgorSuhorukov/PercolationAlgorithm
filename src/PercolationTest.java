@@ -232,6 +232,27 @@ public class PercolationTest {
     }
 
     @Test
+    public void testPercolates5() {
+        // Case 1
+        Percolation percolation = new Percolation(4);
+        percolation.open(1, 4);
+        assertFalse(percolation.percolates());
+        assertEquals(1, percolation.numberOfOpenSites());
+
+        percolation.open(2, 4);
+        assertFalse(percolation.percolates());
+        assertEquals(2, percolation.numberOfOpenSites());
+
+        percolation.open(3, 4);
+        assertFalse(percolation.percolates());
+        assertEquals(3, percolation.numberOfOpenSites());
+
+        percolation.open(4, 4);
+        assertTrue(percolation.percolates());
+        assertEquals(4, percolation.numberOfOpenSites());
+    }
+
+    @Test
     public void testPercolatesWithLargeNumber() {
         int gridSize = 100;
         Percolation percolation = new Percolation(gridSize);

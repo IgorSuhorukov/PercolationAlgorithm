@@ -63,6 +63,6 @@ public class PercolationStats {
         if (max == 1) {
             return 1;
         }
-        return StdRandom.uniform(1, max);
+        return StdRandom.uniform(1, max + 1);
     }
 }
