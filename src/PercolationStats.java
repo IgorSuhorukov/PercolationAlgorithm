@@ -46,7 +46,7 @@ public class PercolationStats {
             Percolation percolation = new Percolation(n);
             boolean percolates = false;
             while (!percolates) {
-                percolation.open(StdRandom.uniform(1, n), StdRandom.uniform(1, n));
+                percolation.open(getRandomNumber(n), getRandomNumber(n));
                 percolates = percolation.percolates();
             }
             int openSites = percolation.numberOfOpenSites();
@@ -57,5 +57,12 @@ public class PercolationStats {
         System.out.printf("%-30s = %s%n", "mean", percolationStats.mean());
         System.out.printf("%-30s = %s%n", "stddev", percolationStats.stddev());
         System.out.printf("%-30s = [%s,%s]%n", "95% confidence interval", percolationStats.confidenceHi(), percolationStats.confidenceLo());
+    }
+
+    private static int getRandomNumber(int max) {
+        if (max == 1) {
+            return 1;
+        }
+        return StdRandom.uniform(1, max);
     }
 }
