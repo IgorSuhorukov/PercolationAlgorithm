@@ -10,6 +10,9 @@ public class Percolation {
     private final int[] sizes;
 
     public Percolation(int n) {
+        if (n <= 0) {
+            throw new IllegalArgumentException();
+        }
         this.gridSize = n;
         this.grid = new int[n][n];
         this.integers = new int[n * n + 2];
@@ -32,20 +35,20 @@ public class Percolation {
     }
 
     public void open(int row, int col) {
-        if (this.isOpen(row, col)) {
-            return;
-        }
-        this.grid[row][col] = row * this.gridSize + col;
+        if (this.isOpen(row, col)) return;
+        this.grid[row-1][col-1] = (row-1) * this.gridSize + (col-1);
         this.connectNearbyOpenCells(row, col);
         this.openSiteAmount++;
     }
 
     public boolean isOpen(int row, int col) {
-        return this.grid[row][col] != -1;
+        this.validate(row, col);
+        return this.grid[row-1][col-1] != -1;
     }
 
     public boolean isFull(int row, int col) {
-        return this.grid[row][col] == -1;
+        this.validate(row, col);
+        return this.grid[row-1][col-1] == -1;
     }
 
     public int numberOfOpenSites() {
@@ -57,28 +60,40 @@ public class Percolation {
     }
 
     private void connectNearbyOpenCells(int row, int col) {
-        if (row + 1 >= this.gridSize) {
-            this.union(this.bottomVirtualPoint, this.grid[row][col]);
+        if (row == this.gridSize) {
+            this.union(this.bottomVirtualPoint, this.grid[row-1][col-1]);
         } else {
             if (this.isOpen(row + 1, col)) {
-                this.union(this.grid[row + 1][col], this.grid[row][col]);
+                this.union(this.grid[row][col-1], this.grid[row-1][col-1]);
             }
         }
 
-        if (row - 1 < 0) {
-            this.union(this.topVirtualPoint, this.grid[row][col]);
+        if (row - 2 < 0) {
+            this.union(this.topVirtualPoint, this.grid[row-1][col-1]);
         } else {
-            if (this.isOpen(row - 1, col)) {
-                this.union(this.grid[row - 1][col], this.grid[row][col]);
+            try {
+                if (this.isOpen(row - 1, col)) {
+                    this.union(this.grid[row - 2][col-1], this.grid[row-1][col-1]);
+                }
+            } catch (IllegalArgumentException exception) {
+                // do nothing
             }
         }
 
-        if (col + 1 < this.gridSize && this.isOpen(row, col + 1)) {
-            this.union(this.grid[row][col + 1], this.grid[row][col]);
+        try {
+            if (col < this.gridSize && this.isOpen(row, col + 1)) {
+                this.union(this.grid[row-1][col], this.grid[row-1][col-1]);
+            }
+        } catch (IllegalArgumentException exception) {
+            // do nothing
         }
 
-        if (col - 1 >= 0 && this.isOpen(row, col - 1)) {
-            this.union(this.grid[row][col - 1], this.grid[row][col]);
+        try {
+            if (col - 2 >= 0 && this.isOpen(row, col - 1)) {
+                this.union(this.grid[row-1][col - 2], this.grid[row-1][col-1]);
+            }
+        } catch (IllegalArgumentException exception) {
+            // do nothing
         }
     }
 
@@ -110,6 +125,12 @@ public class Percolation {
             i = this.integers[i];
         }
         return i;
+    }
+
+    private void validate(int row, int col) {
+        if (row > this.gridSize || row < 1 || col > this.gridSize || col < 1) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public static void main(String[] args) {
