@@ -108,7 +108,14 @@ public class PercolationTest {
     @Test
     public void testIsFull() {
         Percolation percolation = new Percolation(1);
-        percolation.isFull(1, 1);
+        assertFalse(percolation.isFull(1, 1));
+    }
+
+    @Test
+    public void testIsFull2() {
+        Percolation percolation = new Percolation(1);
+        percolation.open(1, 1);
+        assertTrue(percolation.isFull(1, 1));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -121,6 +128,13 @@ public class PercolationTest {
     public void testIsFullThrowsIlleagalArgumentExceptionRow() {
         Percolation percolation = new Percolation(10);
         percolation.isFull(11, 1);
+    }
+
+    @Test
+    public void testIsFullIsOpen() {
+        Percolation percolation = new Percolation(2);
+        assertFalse(percolation.isFull(1, 1));
+        assertFalse(percolation.isOpen(1, 1));
     }
 
     @Test

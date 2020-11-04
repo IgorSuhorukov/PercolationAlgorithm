@@ -2,7 +2,7 @@ public class Percolation {
     private final int gridSize;
     private final int topVirtualPoint;
     private final int bottomVirtualPoint;
-    private final int[][] grid;
+    private final boolean[][] grid;
     private int openSiteAmount;
     private final int[] integers;
     private final int[] sizes;
@@ -12,7 +12,7 @@ public class Percolation {
             throw new IllegalArgumentException();
         }
         this.gridSize = n;
-        this.grid = new int[n][n];
+        this.grid = new boolean[n][n];
         this.integers = new int[n * n + 2];
         this.sizes = new int[integers.length];
 
@@ -21,7 +21,7 @@ public class Percolation {
             for (int j = 0; j < n; j++) {
                 this.integers[cellName] = cellName;
                 this.sizes[cellName] = 1;
-                this.grid[i][j] = -1;
+                this.grid[i][j] = false;
                 cellName++;
             }
         }
@@ -34,19 +34,19 @@ public class Percolation {
 
     public void open(int row, int col) {
         if (this.isOpen(row, col)) return;
-        this.grid[row - 1][col - 1] = (row - 1) * this.gridSize + (col - 1);
+        this.grid[row - 1][col - 1] = true;
         this.connectNearbyOpenCells(row, col);
         this.openSiteAmount++;
     }
 
     public boolean isOpen(int row, int col) {
         this.validate(row, col);
-        return this.grid[row - 1][col - 1] != -1;
+        return this.grid[row - 1][col - 1];
     }
 
     public boolean isFull(int row, int col) {
         this.validate(row, col);
-        return this.grid[row - 1][col - 1] == -1;
+        return connected(this.topVirtualPoint, this.getItemName(row - 1, col - 1));
     }
 
     public int numberOfOpenSites() {
@@ -59,40 +59,44 @@ public class Percolation {
 
     private void connectNearbyOpenCells(int row, int col) {
         if (row == this.gridSize) {
-            this.union(this.bottomVirtualPoint, this.grid[row - 1][col - 1]);
+            this.union(this.bottomVirtualPoint, this.getItemName(row - 1, col - 1));
         } else {
             if (this.isOpen(row + 1, col)) {
-                this.union(this.grid[row][col - 1], this.grid[row - 1][col - 1]);
+                this.union(this.getItemName(row,col - 1), this.getItemName(row - 1, col - 1));
             }
         }
 
         if (row - 2 < 0) {
-            this.union(this.topVirtualPoint, this.grid[row - 1][col - 1]);
+            this.union(this.topVirtualPoint, this.getItemName(row - 1, col - 1));
         } else {
             if (this.isOpen(row - 1, col)) {
-                this.union(this.grid[row - 2][col - 1], this.grid[row - 1][col - 1]);
+                this.union(this.getItemName(row - 2,col - 1), this.getItemName(row - 1, col - 1));
             }
         }
 
         if (col < this.gridSize && this.isOpen(row, col + 1)) {
-            this.union(this.grid[row - 1][col], this.grid[row - 1][col - 1]);
+            this.union(this.getItemName(row - 1, col), this.getItemName(row - 1, col - 1));
         }
 
         if (col - 2 >= 0 && this.isOpen(row, col - 1)) {
-            this.union(this.grid[row - 1][col - 2], this.grid[row - 1][col - 1]);
+            this.union(this.getItemName(row - 1, col - 2), this.getItemName(row - 1, col - 1));
         }
+    }
+
+    private int getItemName(int row, int col) {
+        return this.gridSize * row + col;
     }
 
     private boolean connected(int a, int b) {
         return findRoot(a) == findRoot(b);
     }
 
-    private int[] union(int a, int b) {
+    private void union(int a, int b) {
         int rootA = findRoot(a);
         int rootB = findRoot(b);
 
         if (rootA == rootB) {
-            return this.integers;
+            return;
         }
 
         if (this.sizes[rootA] < this.sizes[rootB]) {
@@ -102,8 +106,6 @@ public class Percolation {
             this.integers[rootB] = rootA;
             this.sizes[rootA] += this.sizes[rootB];
         }
-
-        return this.integers;
     }
 
     private int findRoot(int i) {
