@@ -113,9 +113,47 @@ public class PercolationTest {
 
     @Test
     public void testIsFull2() {
-        Percolation percolation = new Percolation(1);
+        Percolation percolation = new Percolation(10);
         percolation.open(1, 1);
         assertTrue(percolation.isFull(1, 1));
+
+        percolation.open(1, 2);
+        assertTrue(percolation.isFull(1, 2));
+
+        percolation.open(2, 2);
+        assertTrue(percolation.isFull(2, 2));
+
+        percolation.open(3, 2);
+        assertTrue(percolation.isFull(3, 2));
+
+        percolation.open(4, 2);
+        assertTrue(percolation.isFull(4, 2));
+
+        percolation.open(5, 3);
+        assertFalse(percolation.isFull(5, 3));
+
+        percolation.open(5, 2);
+        assertTrue(percolation.isFull(5, 2));
+        assertTrue(percolation.isFull(5, 3));
+
+        percolation.open(5, 5);
+        assertFalse(percolation.isFull(5, 5));
+
+        percolation.open(4, 5);
+        assertFalse(percolation.isFull(4, 5));
+
+        percolation.open(3, 5);
+        assertFalse(percolation.isFull(3, 5));
+
+        percolation.open(2, 5);
+        assertFalse(percolation.isFull(2, 5));
+
+        percolation.open(1, 5);
+        assertTrue(percolation.isFull(1, 5));
+        assertTrue(percolation.isFull(2, 5));
+        assertTrue(percolation.isFull(3, 5));
+        assertTrue(percolation.isFull(4, 5));
+        assertTrue(percolation.isFull(5, 5));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -273,6 +311,25 @@ public class PercolationTest {
         boolean percolates = false;
         while (!percolates) {
             percolation.open(PercolationTest.getRandomNumberInRange(gridSize), PercolationTest.getRandomNumberInRange(gridSize));
+            percolates = percolation.percolates();
+        }
+        assertTrue(percolates);
+    }
+
+    @Test
+    public void testPercolatesWithLargeNumber2() {
+        int gridSize = 20;
+        Percolation percolation = new Percolation(gridSize);
+        boolean percolates = false;
+
+        while (!percolates) {
+            int current = percolation.numberOfOpenSites();
+            int openSites = current;
+
+            while (current == openSites) {
+                percolation.open(PercolationTest.getRandomNumberInRange(gridSize), PercolationTest.getRandomNumberInRange(gridSize));
+                openSites = percolation.numberOfOpenSites();
+            }
             percolates = percolation.percolates();
         }
         assertTrue(percolates);

@@ -62,7 +62,7 @@ public class Percolation {
             this.union(this.bottomVirtualPoint, this.getItemName(row - 1, col - 1));
         } else {
             if (this.isOpen(row + 1, col)) {
-                this.union(this.getItemName(row,col - 1), this.getItemName(row - 1, col - 1));
+                this.union(this.getItemName(row, col - 1), this.getItemName(row - 1, col - 1));
             }
         }
 
@@ -70,7 +70,7 @@ public class Percolation {
             this.union(this.topVirtualPoint, this.getItemName(row - 1, col - 1));
         } else {
             if (this.isOpen(row - 1, col)) {
-                this.union(this.getItemName(row - 2,col - 1), this.getItemName(row - 1, col - 1));
+                this.union(this.getItemName(row - 2, col - 1), this.getItemName(row - 1, col - 1));
             }
         }
 

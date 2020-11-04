@@ -13,6 +13,7 @@ public class PercolationStats {
         }
 
         this.trials = trials;
+        this.threshold = new double[trials];
     }
 
     // sample mean of percolation threshold
@@ -41,13 +42,19 @@ public class PercolationStats {
         int trials = Integer.parseInt(args[1]);
 
         PercolationStats percolationStats = new PercolationStats(n, trials);
-        percolationStats.setThreshold(trials);
 
         for (int i = 0; i < trials; i++) {
             Percolation percolation = new Percolation(n);
             boolean percolates = false;
             while (!percolates) {
-                percolation.open(getRandomNumber(n), getRandomNumber(n));
+                int current = percolation.numberOfOpenSites();
+                int openSites = current;
+
+                while (current == openSites) {
+                    percolation.open(getRandomNumber(n), getRandomNumber(n));
+                    openSites = percolation.numberOfOpenSites();
+                }
+
                 percolates = percolation.percolates();
             }
             int openSites = percolation.numberOfOpenSites();
