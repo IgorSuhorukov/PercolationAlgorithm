@@ -3,8 +3,8 @@ import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
     private static final double CONST = 1.96;
-    private double[] threshold;
-    private final int trials;
+    private final double[] threshold;
+    private final double trials;
 
     // perform independent trials on an n-by-n grid
     public PercolationStats(int n, int trials) {
@@ -58,20 +58,20 @@ public class PercolationStats {
                 percolates = percolation.percolates();
             }
             int openSites = percolation.numberOfOpenSites();
-            percolationStats.addThreshold(i, (double) openSites / (n * n));
+            percolationStats.updateThreshold(i, (double) openSites / (n * n));
         }
 
         System.out.printf("%-30s = %s%n", "mean", percolationStats.mean());
         System.out.printf("%-30s = %s%n", "stddev", percolationStats.stddev());
-        System.out.printf("%-30s = [%s,%s]%n", "95% confidence interval", percolationStats.confidenceHi(), percolationStats.confidenceLo());
+        System.out.printf(
+                "%-30s = [%s,%s]%n", "95% confidence interval",
+                percolationStats.confidenceHi(),
+                percolationStats.confidenceLo()
+        );
     }
 
-    private void addThreshold(int i, double v) {
+    private void updateThreshold(int i, double v) {
         this.threshold[i] = v;
-    }
-
-    private void setThreshold(int size) {
-        this.threshold = new double[size];
     }
 
     private static int getRandomNumber(int max) {
